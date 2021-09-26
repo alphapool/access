@@ -83,13 +83,19 @@ def print_results(results, results_n):
     result_n = 0
     if results_n > 0:
         print(f'  Limiting to {results_n} reults\n')
+    s = 21
+    if [r for r in results if 'poster' in r.keys()] != []:
+        s = 25
+    print(f"  Name{' '*(s-2)}Minted{' '*16}Listing")
     for r in results:
+        key = 'unit'
         if 'poster' in r.keys():
-            print(' ', r['poster']['name'], '-', r['poster']['minted'].replace('T',' '), end='')
-        if 'unit' in r.keys():
-            print(' ', r['unit']['name'], '-', r['unit']['minted'].replace('T',' '), end='')
+            key = 'poster'
+        name = F"{r[key]['name']}"
+        print(f"  {name}{' '*(s-len(name))}- {r[key]['minted'].replace('T',' ')}", end='')
         if r['listing'] != None:
-            print(f" - {r['listing']['price']/1000000} - https://cnft.io/token.php?id={r['listing']['id']}")
+            price = f"{r['listing']['price']/1000000}"
+            print(f" - {price}{' '*(14-len(price))}- https://cnft.io/token.php?id={r['listing']['id']}")
         else:
             print('')
         result_n += 1
