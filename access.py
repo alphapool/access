@@ -66,7 +66,7 @@ def filter_l(results, reverse):
         return results
 
 def filter_o(results, hours):
-        print(f"\n  Filtering for reults minted in the last {hours} hours", end =' - ')
+        print(f"\n  Filtering for results minted in the last {hours} hours", end =' - ')
         key = 'unit'
         if 'poster' in results[0].keys():
             key = 'poster'
