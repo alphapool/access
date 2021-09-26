@@ -255,6 +255,8 @@ elif args.command == 'last':
     results = [[units['units'][u]['unit']['minted'], units['units'][u]] for u in units['units']] + \
         [[posters['posters'][p]['poster']['minted'], posters['posters'][p]] for p in posters['posters']]
 
+    print('\n  Total mints:', len(results))
+
     if args.o != None:
         args_o = args.o
     else:
