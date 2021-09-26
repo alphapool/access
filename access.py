@@ -77,9 +77,11 @@ def filter_o(results, hours):
         return results
 
 def print_results(results, results_n):
+    print('')
+    if len(results) == 0:
+        sys.exit(0)
     if results_n == None:
         results_n = 0
-    print('')
     result_n = 0
     if results_n > 0:
         print(f'  Limiting to {results_n} reults\n')
