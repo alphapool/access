@@ -88,16 +88,16 @@ def print_results(results, results_n):
     s = 21
     if [r for r in results if 'poster' in r.keys()] != []:
         s = 25
-    print(f"  Name{' '*(s-2)}Minted{' '*16}Listing")
+    print(f"  Name{' '*(s-2)}Minted{' '*16}Price{' '*11}Listing")
     for r in results:
         key = 'unit'
         if 'poster' in r.keys():
             key = 'poster'
         name = F"{r[key]['name']}"
-        print(f"  {name}{' '*(s-len(name))}- {r[key]['minted'].replace('T',' ')}", end='')
+        print(f"  {name}{' '*(s-len(name))}  {r[key]['minted'].replace('T',' ')}", end='')
         if r['listing'] != None:
             price = f"{r['listing']['price']/1000000}"
-            print(f" - {price}{' '*(14-len(price))}- https://cnft.io/token.php?id={r['listing']['id']}")
+            print(f"   {price}{' '*(14-len(price))}  https://cnft.io/token.php?id={r['listing']['id']}")
         else:
             print('')
         result_n += 1
@@ -242,9 +242,11 @@ elif args.command == 'items':
 
     print('')
     result_n = 0
-    print(f"  No   Item{' '*31}Instances")
+    print(f"  No   Item{' '*31}Instances  Rarity")
     for i in items:
-        print(f"  {i[0]}{' '*(3-len(i[0]))}- {i[1]['name']}{' '*(33-len(i[1]['name']))}- {i[1]['instances']}")
+        n = f"{i[1]['name']}"
+        s = i[1]['instances']
+        print(f"  {i[0]}{' '*(3-len(i[0]))}  {n}{' '*(33-len(n))}  {s}{' '*(11-len(s))}{int(s)*100/50000:.2f}%")
         result_n += 1
         if result_n == results_n:
             break
