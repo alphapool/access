@@ -8,7 +8,8 @@ from datetime import timedelta
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('command', help='units, posters, items, floor, last')
+parser.add_argument('command', help='units, posters, items, floor, last, holdings')
+parser.add_argument('-a', type=str, help='Address to get holdings for')
 parser.add_argument('-i', type=str, help="Filter for units containing items (samurai, astro, 'Black desk', etc)")
 parser.add_argument('-t', type=int, help='Filter for units containing T number of items')
 parser.add_argument('-m', type=str, help='Filter for units by Mikka position (pc, wine, pizza, fh, ft, by, bs, vr)')
@@ -54,6 +55,16 @@ def get_posters():
         print('failed -', res.status_code, '\n')
         sys.exit(1)
 
+def get_holdings(addr):
+    print(f'  Getting holdings for {addr}...', end='')
+    res = requests.get(f'https://api.pool.pm/wallet/{addr}')
+    if res.status_code == 200:
+        print('done')
+        return res.json()
+    else:
+        print('failed -', res.status_code, '\n')
+        sys.exit(1)
+
 def filter_l(results, reverse):
         print('\n  Filtering for listings only', end=' - ')
         results = [r for r in results if r['listing'] != None]
@@ -66,7 +77,7 @@ def filter_l(results, reverse):
         return results
 
 def filter_o(results, hours):
-        print(f"\n  Filtering for results minted in the last {hours} hours", end =' - ')
+        print(f"\n  Filtering for results minted in the last {hours} hours", end=' - ')
         key = 'unit'
         if 'poster' in results[0].keys():
             key = 'poster'
@@ -370,6 +381,26 @@ elif args.command == 'floor':
         else:
             pct = f"{n*100/50:.2f}%"
             print(f"  {s}   {n}/50    {pct}   {floor}")
+
+elif args.command == 'holdings':
+    if args.a == None:
+        print('  Please specify an address with "-a"\n')
+        sys.exit(1)
+
+    holdings = get_holdings(args.a)
+
+    assets = [t for t in holdings['tokens'] if t['policy'] == 'a5425bd7bc4182325188af2340415827a73f845846c165d9e14c5aed']
+    
+    print(f"\n  Found {len(assets)} CardanoCity assets\n")
+
+    for a in assets:
+        print(f"  {a['metadata']['name']}", end=' '*6)
+        if len(a['metadata']['contents']) > 3:
+            for i in sorted(a['metadata']['contents'], key=lambda k: int(k['instances']))[:3]:
+                print(f"{i['name']}", end=f"{' '*(34-len(i['name']))}")
+            print('')
+        else:
+            print('')
 
 else:
     parser.print_help()
