@@ -14,6 +14,7 @@ parser.add_argument('-i', type=str, help="Filter for units containing items (sam
 parser.add_argument('-t', type=int, help='Filter for units containing T number of items')
 parser.add_argument('-m', type=str, help='Filter for units by Mikka position (pc, wine, pizza, fh, ft, by, bs, vr)')
 parser.add_argument('-l', action='store_true', help='Show only results that have listings')
+parser.add_argument('-g', action='store_true', help='Show only results that have known glitches')
 parser.add_argument('-d', type=int, help='Sort by date minted 0 - ascending, or 1 - descending')
 parser.add_argument('-p', type=int, help='Sort by price 0 - ascending, or 1 - descending')
 parser.add_argument('-n', type=int, help='Sort by name 0 - ascending, or 1 - descending')
@@ -190,6 +191,11 @@ if args.command == 'units':
 
     if args.l:
         results = filter_l(results, args.p)
+
+    if args.g:
+        print("\n  Filtering for results with known glitches", end=' - ')
+        results = [r for r in results if r['unit']['glitch'] != None]
+        print('found', len(results))
 
     if args.d != None:
         results = sorted(results, key=lambda k: k['unit']['minted'], reverse=args.d)
