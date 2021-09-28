@@ -127,11 +127,6 @@ if args.command == 'units':
 
     print('\n  Total units:', units_n)
 
-    if args.r != None:
-        results_n = args.r
-    else:
-        results_n = 0
-
     results = []
     if args.i != None:
         args_i = args.i.split(',')
@@ -214,11 +209,6 @@ elif args.command == 'posters':
     
     print('\n  Total posters:', posters_n)
 
-    if args.r != None:
-        results_n = args.r
-    else:
-        results_n = 0
-    
     results = []
     if args.x != None:
         args_x = args.x.split(',')
