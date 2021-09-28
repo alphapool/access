@@ -393,19 +393,34 @@ elif args.command == 'holdings':
         print('  Please specify an address with "-a"\n')
         sys.exit(1)
 
+    units = get_units()
+    posters = get_posters()
+    items = get_items()
     holdings = get_holdings(args.a)
 
-    assets = [t for t in holdings['tokens'] if t['policy'] == 'a5425bd7bc4182325188af2340415827a73f845846c165d9e14c5aed']
-    
-    print(f"\n  Found {len(assets)} CardanoCity assets\n")
+    assets = [t['metadata']['name'] for t in holdings['tokens'] if t['policy'] == 'a5425bd7bc4182325188af2340415827a73f845846c165d9e14c5aed']
+    units = [units['units'][u] for u in units['units'] if units['units'][u]['unit']['name'] in assets]
+    posters = [posters['posters'][p] for p in posters['posters'] if posters['posters'][p]['poster']['name'] in assets]
 
-    for a in assets:
-        print(f"  {a['metadata']['name']}", end=' '*6)
-        if len(a['metadata']['contents']) > 3:
-            for i in sorted(a['metadata']['contents'], key=lambda k: int(k['instances']))[:3]:
-                print(f"{i['name']}", end=f"{' '*(34-len(i['name']))}")
-            print('')
-        else:
+    print(f"\n  Found {len(assets)} CardanoCity assets")
+
+    if args.g:
+        print("\n  Filtering for results with known glitches", end=' - ')
+        units = [u for u in units if u['unit']['glitch'] != None]
+        print('found', len(units))
+
+    if len(posters) > 0:
+        print('')
+        for p in posters:
+            print(f"  {p['poster']['name']}")
+
+    if len(units) > 0:
+        print('')
+        for u in units:
+            print(f"  {u['unit']['name']}", end='  ')
+            for i in sorted(u['unit']['contents'], key=lambda k: int(k))[:3]:
+                item = items['items'][i]['name']
+                print(f"{item}", end=f"{' '*(34-len(item))}")
             print('')
 
 else:
