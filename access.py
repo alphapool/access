@@ -8,7 +8,7 @@ from datetime import timedelta
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('command', help='units, posters, items, floor, last, holdings')
+parser.add_argument('command', help='units, posters, items, floor, last, holdings, inspect')
 parser.add_argument('-a', type=str, help='Address to get holdings for')
 parser.add_argument('-i', type=str, help="Filter for units containing items (samurai, astro, 'Black desk', etc)")
 parser.add_argument('-t', type=int, help='Filter for units containing T number of items')
@@ -23,6 +23,8 @@ parser.add_argument('-r', type=int, help='Max number of results to return')
 parser.add_argument('-b', action='store_true', help='Show only units with no boxes')
 parser.add_argument('-x', type=str, help='Filter by poster number')
 parser.add_argument('-f', type=int, help='Number of item floor prices to show (1 - 95)')
+parser.add_argument('-u', type=str, help='Units to inspect, e.g. 50000,42069,etc')
+
 
 args = parser.parse_args()
 
@@ -116,6 +118,15 @@ def print_results(results, results_n):
         if result_n == results_n:
             break
 
+mikkas = {'vr': {'name': 'VR', 'key': 'vr'},
+        'pizza': {'name': 'Pizza', 'key': 'pizza_sh_sp'}, 
+        'fh': {'name': 'Floor Hoodie', 'key': 'floor_r_sh_hd'},
+        'ft': {'name': 'Floor Tablet', 'key': 'floor_d_sh_sp'},
+        'by': {'name': 'Bed Yukata', 'key': 'bed_lh_yk'},
+        'bs': {'name': 'Bed Sport Outfit', 'key': 'bed_sh_sp'},
+        'wine': {'name': 'Wine', 'key': 'wine_sh_sp'},
+        'pc': {'name': 'PC', 'key': 'pc'}}
+
 print('')
 
 if args.command == 'units':
@@ -153,14 +164,6 @@ if args.command == 'units':
     else:
         results = units
 
-    mikkas = {'vr': {'name': 'VR', 'key': 'vr'},
-            'pizza': {'name': 'Pizza', 'key': 'pizza_sh_sp'}, 
-            'fh': {'name': 'Floor Hoodie', 'key': 'floor_r_sh_hd'},
-            'ft': {'name': 'Floor Tablet', 'key': 'floor_d_sh_sp'},
-            'by': {'name': 'Bed Yukata', 'key': 'bed_lh_yk'},
-            'bs': {'name': 'Bed Sport Outfit', 'key': 'bed_sh_sp'},
-            'wine': {'name': 'Wine', 'key': 'wine_sh_sp'},
-            'pc': {'name': 'PC', 'key': 'pc'}}
     results_m = []
     if args.m != None:
         print('\n  Filtering for Mikka:', mikkas[args.m]['name'], end=' - ')
@@ -412,6 +415,43 @@ elif args.command == 'holdings':
                 item = items['items'][i]['name']
                 print(f"{item}", end=f"{' '*(34-len(item))}")
             print('')
+
+elif args.command == 'inspect':
+    if args.u == None:
+        print('  Please specify units with "-u"\n')
+        sys.exit(1)
+
+    args_u = args.u.split(',')
+    units = get_units()
+    items = get_items()
+
+    units = [units['units'][u] for u in units['units'] if units['units'][u]['unit']['name'][-5:] in args_u]
+    mikkas = {v['key']: v['name'] for v in mikkas.values()}
+
+    for u in units:
+        if u['listing'] != None:
+            listing = f"{u['listing']['price']/1000000:,} - https://cnft.io/token.php?id={u['listing']['id']}"
+        else:
+            listing = 'N/A'
+        u = u['unit']
+        if u['glitch'] != None:
+            glitch = u['glitch']['item']
+        else:
+            glitch = 'N/A'
+        print(f"\n  Name:    {u['name']}\
+                \n  Minted:  {u['minted']}\
+                \n  Base:    {u['base']}\
+                \n  Poster:  {u['poster']}\
+                \n  Value:   {int(u['value']):,}\
+                \n  Mikka:   {mikkas[u['mikka']['position']]}\
+                \n  Glitch:  {glitch}\
+                \n  Listing: {listing}\
+                \n  Items:   {len(u['contents'])+2}\
+                \n\
+                \n  Item{' '*30}Rarity")
+        for i in sorted(u['contents'], key=lambda k: int(k)):
+            item = items['items'][i]
+            print(f"  {item['name']}{' '*(34-len(item['name']))}{int(item['instances'])*100/50000:.2f}%")
 
 else:
     parser.print_help()
