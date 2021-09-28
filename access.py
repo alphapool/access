@@ -108,7 +108,7 @@ def print_results(results, results_n):
         name = F"{r[key]['name']}"
         print(f"  {name}{' '*(s-len(name))}  {r[key]['minted'].replace('T',' ')}", end='')
         if r['listing'] != None:
-            price = f"{r['listing']['price']/1000000}"
+            price = f"{r['listing']['price']/1000000:,}"
             print(f"   {price}{' '*(14-len(price))}  https://cnft.io/token.php?id={r['listing']['id']}")
         else:
             print('')
@@ -338,7 +338,7 @@ elif args.command == 'floor':
         floor = [u for u in i[2] if u['listing'] != None]
         if len(floor) > 0:
             floor = sorted(floor, key=lambda k: k['listing']['price'])
-            floor = f"{floor[0]['listing']['price']/1000000}"
+            floor = f"{floor[0]['listing']['price']/1000000:,}"
         else:
             floor = 'N/A'
         minted = f"{n}/{i[1]['instances']}"
@@ -362,7 +362,7 @@ elif args.command == 'floor':
         floor = [u for u in positions[p][1] if u['listing'] != None]
         if len(floor) > 0:
             floor = sorted(floor, key=lambda k: k['listing']['price'])
-            floor = f"{floor[0]['listing']['price']/1000000}"
+            floor = f"{floor[0]['listing']['price']/1000000:,}"
         else:
             floor = 'N/A'
         print(f"  {positions[p][0]}{' '*(18-len(positions[p][0]))}{n}{' '*(12-len(str(n)))}{d}{' '*(15-len(d))}{floor}")
@@ -378,7 +378,7 @@ elif args.command == 'floor':
         floor = [x for x in posters_s[s] if x['listing'] != None]
         if len(floor) > 0:
             floor = sorted(floor, key=lambda k: k['listing']['price'])
-            floor = floor[0]['listing']['price']/1000000
+            floor = f"{floor[0]['listing']['price']/1000000:,}"
         else:
             floor = 'N/A'
         if s == 'CardanoCityPoster6':
