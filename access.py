@@ -449,10 +449,10 @@ elif args.command == 'inspect':
                 \n  Listing: {listing}\
                 \n  Items:   {len(u['contents'])+2}\
                 \n\
-                \n  Item{' '*30}Rarity")
+                \n  No  Item{' '*30}Rarity")
         for i in sorted(u['contents'], key=lambda k: int(k)):
             item = items['items'][i]
-            print(f"  {item['name']}{' '*(34-len(item['name']))}{int(item['instances'])*100/50000:.2f}%")
+            print(f"  {i}{' '*(4-len(i))}{item['name']}{' '*(34-len(item['name']))}{int(item['instances'])*100/50000:.2f}%")
 
 else:
     parser.print_help()
