@@ -422,6 +422,7 @@ elif args.command == 'inspect':
         sys.exit(1)
 
     args_u = args.u.split(',')
+    args_u = ['0'*(5-len(a)) + a for a in args_u]
     units = get_units()
     items = get_items()
 
