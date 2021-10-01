@@ -398,7 +398,8 @@ elif args.command == 'holdings':
     posters = [posters['posters'][p] for p in posters['posters'] if posters['posters'][p]['poster']['name'] in assets]
 
     units = sorted(units, key=lambda k: k['unit']['name'])
-    posters = sorted(posters, key=lambda k: k['poster']['name'])
+    posters = sorted(posters, key=lambda k: int([s for s in k['poster']['name'][17:].split('I')[:-1] if s.isdigit()][1]))
+    posters = sorted(posters, key=lambda k: int([s for s in k['poster']['name'][17:].split('I')[:-1] if s.isdigit()][0]))
 
     print(f"\n  Found {len(assets)} CardanoCity assets")
 
