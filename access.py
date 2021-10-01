@@ -225,9 +225,10 @@ elif args.command == 'posters':
         results = posters
 
     if args.n != None:
-        results = sorted(results, key=lambda k: k['poster']['name'], reverse=args.n)
+        int(''.join([s for s in k['poster']['name'][17:].split('I')[:-1] if s.isdigit()]))
+        results = sorted(results, key=lambda k: int(''.join([s for s in k['poster']['name'][17:].split('I')[:-1] if s.isdigit()])), reverse=args.n)
     else:
-        results = sorted(results, key=lambda k: k['poster']['name'])
+        results = sorted(results, key=lambda k: int(''.join([s for s in k['poster']['name'][17:].split('I')[:-1] if s.isdigit()])))
 
     if args.o != None:
         results = filter_o(results, args.o)
