@@ -395,6 +395,9 @@ elif args.command == 'holdings':
     units = [units['units'][u] for u in units['units'] if units['units'][u]['unit']['name'] in assets]
     posters = [posters['posters'][p] for p in posters['posters'] if posters['posters'][p]['poster']['name'] in assets]
 
+    units = sorted(units, key=lambda k: k['unit']['name'])
+    posters = sorted(posters, key=lambda k: k['poster']['name'])
+
     print(f"\n  Found {len(assets)} CardanoCity assets")
 
     if args.g:
