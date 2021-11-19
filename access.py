@@ -111,7 +111,7 @@ def print_results(results, results_n):
         print(f"  {name}{' '*(s-len(name))}  {r[key]['minted'].replace('T',' ')}", end='')
         if r['listing'] != None:
             price = f"{r['listing']['price']/1000000:,}"
-            print(f"   {price}{' '*(14-len(price))}  https://cnft.io/token.php?id={r['listing']['id']}")
+            print(f"   {price}{' '*(14-len(price))}  https://cnft.io/token/{r['listing']['id']}")
         else:
             print('')
         result_n += 1
@@ -437,7 +437,7 @@ elif args.command == 'inspect':
 
     for u in units:
         if u['listing'] != None:
-            listing = f"{u['listing']['price']/1000000:,} - https://cnft.io/token.php?id={u['listing']['id']}"
+            listing = f"{u['listing']['price']/1000000:,} - https://cnft.io/token/{u['listing']['id']}"
         else:
             listing = 'N/A'
         u = u['unit']
