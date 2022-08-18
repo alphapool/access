@@ -71,7 +71,6 @@ def get_holdings(addr):
 def filter_l(results, reverse):
         print('\n  Filtering for listings only', end=' - ')
         results = [r for r in results if r['listing'] != None]
-        results = [r for r in results if not r['listing']['sold']]
         print('found', len(results))
         if reverse != None:
             results = sorted(results, key=lambda k: k['listing']['price'], reverse=reverse)
@@ -111,7 +110,7 @@ def print_results(results, results_n):
         print(f"  {name}{' '*(s-len(name))}  {r[key]['minted'].replace('T',' ')}", end='')
         if r['listing'] != None:
             price = f"{r['listing']['price']/1000000:,}"
-            print(f"   {price}{' '*(14-len(price))}  https://cnft.io/token/{r['listing']['id']}")
+            print(f"   {price}{' '*(14-len(price))}  https://jpg.store/asset/{r['listing']['id']}")
         else:
             print('')
         result_n += 1
@@ -288,7 +287,6 @@ elif args.command == 'last':
     if args.l:
         print('\n  Filtering for listings only', end=' - ')
         results = [r for r in results if r[1]['listing'] != None]
-        results = [r for r in results if not r[1]['listing']['sold']]
         print('found', len(results))
         if args.p != None:
             results = sorted(results, key=lambda k: k[1]['listing']['price'], reverse=args.p)
@@ -437,7 +435,7 @@ elif args.command == 'inspect':
 
     for u in units:
         if u['listing'] != None:
-            listing = f"{u['listing']['price']/1000000:,} - https://cnft.io/token/{u['listing']['id']}"
+            listing = f"{u['listing']['price']/1000000:,} - https://jpg.store/asset/{u['listing']['id']}"
         else:
             listing = 'N/A'
         u = u['unit']
